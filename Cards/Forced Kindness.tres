@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://5dramuyfy2rh"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_38ud0"]
+
+[resource]
+script = ExtResource("1_38ud0")
+title = "Forced Kindness"
+description = "Opponent discards all but one card in your hand. Opponent gets every card in your hand (except this one)."
+flavorText = "Here, have a gift, I insist."
+cost = 5

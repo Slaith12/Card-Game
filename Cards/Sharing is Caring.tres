@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://c4gbry17mslh0"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_sh38v"]
+
+[resource]
+script = ExtResource("1_sh38v")
+title = "Sharing is Caring"
+description = "Both players reveal their hand. Each player takes 2 cards from the other player's hand."
+flavorText = ""
+cost = 5

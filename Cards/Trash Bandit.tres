@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://08wtvre7m7pb"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_k32be"]
+
+[resource]
+script = ExtResource("1_k32be")
+title = "Trash Bandit"
+description = "Put a card from any discard pile into your hand."
+flavorText = ""
+cost = 3

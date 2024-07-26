@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://cyjg4y30tim1p"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_0wnrq"]
+
+[resource]
+script = ExtResource("1_0wnrq")
+title = "Hello World"
+description = "Gain 1 Mana"

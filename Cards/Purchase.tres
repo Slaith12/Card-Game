@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://b2c67sjq1x3b4"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_fhdd6"]
+
+[resource]
+script = ExtResource("1_fhdd6")
+title = "Purchase"
+description = "Take a card from the opponent's hand. Opponent gets +3 energy next turn."
+flavorText = ""
+cost = 3

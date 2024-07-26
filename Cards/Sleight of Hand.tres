@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://0eolp6plrfv7"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_wqu4j"]
+
+[resource]
+script = ExtResource("1_wqu4j")
+title = "Sleight of Hand"
+description = "Look at the top 3 cards of the opponent's draw pile. Place those cards anywhere in their draw pile."
+flavorText = ""
+cost = 4

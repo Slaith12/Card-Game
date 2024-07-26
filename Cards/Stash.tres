@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://cxir42sei1oe4"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_0abo8"]
+
+[resource]
+script = ExtResource("1_0abo8")
+title = "Stash"
+description = "Move any number of cards from your hand to your draw pile at any position."
+flavorText = ""
+cost = 3

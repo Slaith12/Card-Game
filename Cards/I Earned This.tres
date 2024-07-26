@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://ccyfn7o7kd4sl"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_s7fik"]
+
+[resource]
+script = ExtResource("1_s7fik")
+title = "I Earned This"
+description = "Take a card from any draw pile from any position."
+flavorText = "After everything I've done, I think I deserve a little treat."
+cost = 8

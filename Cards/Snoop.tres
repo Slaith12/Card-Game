@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://dqa7rhirx2nij"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_hrsm8"]
+
+[resource]
+script = ExtResource("1_hrsm8")
+title = "Snoop"
+description = "Look at any 4 cards from any draw pile."
+flavorText = "What do we have here?"
+cost = 2

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://blpmm732mvf5q"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_qvgjs"]
+
+[resource]
+script = ExtResource("1_qvgjs")
+title = "Recycle"
+description = "Choose a card in your discard pile. At the beginning of your next turn, play that card without paying its energy cost."
+flavorText = ""
+cost = 6

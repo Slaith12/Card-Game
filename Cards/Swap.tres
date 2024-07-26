@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://b86chytg2atut"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_ip4jp"]
+
+[resource]
+script = ExtResource("1_ip4jp")
+title = "Swap"
+description = "Take a card from the opponent's hand. Put this card in the opponent's hand."
+flavorText = ""
+cost = 2

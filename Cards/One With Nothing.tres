@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://bckv7go8atlr4"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_nn2ll"]
+
+[resource]
+script = ExtResource("1_nn2ll")
+title = "One with Nothing"
+description = "Discard your hand."
+flavorText = "When nothing remains, everything is equally possible."
+cost = 1

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://6bcuif7hq3b2"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_minn8"]
+
+[resource]
+script = ExtResource("1_minn8")
+title = "Reset"
+description = "Shuffle both players' discard pile into their draw pile."
+flavorText = ""
+cost = 3
