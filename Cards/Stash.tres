@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_0abo8")
 title = "Stash"
-description = "Move any number of cards from your hand to your draw pile at any position."
+description = "Move any number of cards from your hand into your draw pile at any position."
 flavorText = ""
 cost = 3

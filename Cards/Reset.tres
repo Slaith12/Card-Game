@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_minn8")
 title = "Reset"
-description = "Shuffle both players' discard pile into their draw pile."
+description = "Shuffle target player's discard pile into their draw pile."
 flavorText = ""
-cost = 3
+cost = 5

@@ -18,7 +18,8 @@ func _ready():
 func _process(delta):
 	if not title:
 		_ready()
-	SetData(data)
+	if data:
+		SetData(data)
 
 func SetData(cardData : CardData):
 	if cardData.customFrame:

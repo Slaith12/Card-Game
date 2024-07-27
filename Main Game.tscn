@@ -1,6 +1,20 @@
-[gd_scene load_steps=2 format=3 uid="uid://s856tm2gy7i5"]
+[gd_scene load_steps=15 format=3 uid="uid://s856tm2gy7i5"]
 
 [ext_resource type="Script" path="res://Main Game.gd" id="1_jstw6"]
+[ext_resource type="Resource" uid="uid://bckv7go8atlr4" path="res://Cards/One With Nothing.tres" id="2_67l00"]
+[ext_resource type="Resource" uid="uid://b86chytg2atut" path="res://Cards/Swap.tres" id="3_hyovy"]
+[ext_resource type="Resource" uid="uid://cxir42sei1oe4" path="res://Cards/Stash.tres" id="4_sts6k"]
+[ext_resource type="Resource" uid="uid://dqa7rhirx2nij" path="res://Cards/Snoop.tres" id="5_ss3f3"]
+[ext_resource type="Resource" uid="uid://6bcuif7hq3b2" path="res://Cards/Reset.tres" id="6_i8uex"]
+[ext_resource type="Resource" uid="uid://0eolp6plrfv7" path="res://Cards/Sleight of Hand.tres" id="7_kqbcp"]
+[ext_resource type="Resource" uid="uid://08wtvre7m7pb" path="res://Cards/Trash Bandit.tres" id="8_3pi37"]
+[ext_resource type="Resource" uid="uid://5dramuyfy2rh" path="res://Cards/Forced Kindness.tres" id="9_xmydk"]
+[ext_resource type="Resource" uid="uid://b2c67sjq1x3b4" path="res://Cards/Purchase.tres" id="10_66emp"]
+[ext_resource type="Resource" uid="uid://lt8kqguah5n4" path="res://Cards/Painted Rock.tres" id="11_a4a6j"]
+[ext_resource type="Resource" uid="uid://c4gbry17mslh0" path="res://Cards/Sharing is Caring.tres" id="12_0mfdq"]
+[ext_resource type="Resource" uid="uid://ccyfn7o7kd4sl" path="res://Cards/I Earned This.tres" id="13_37xhj"]
+[ext_resource type="Resource" uid="uid://blpmm732mvf5q" path="res://Cards/Recycle.tres" id="14_fmo71"]
 
 [node name="Main Game" type="Node2D"]
 script = ExtResource("1_jstw6")
+cards = Array[Resource("res://CardData.gd")]([ExtResource("2_67l00"), ExtResource("3_hyovy"), ExtResource("4_sts6k"), ExtResource("4_sts6k"), ExtResource("5_ss3f3"), ExtResource("6_i8uex"), ExtResource("7_kqbcp"), ExtResource("8_3pi37"), ExtResource("8_3pi37"), ExtResource("9_xmydk"), ExtResource("10_66emp"), ExtResource("10_66emp"), ExtResource("11_a4a6j"), ExtResource("12_0mfdq"), ExtResource("13_37xhj"), ExtResource("14_fmo71"), null, null, null, null])

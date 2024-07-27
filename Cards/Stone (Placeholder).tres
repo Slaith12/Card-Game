@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://c83j72u3a7pv0"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_qocvo"]
+
+[resource]
+script = ExtResource("1_qocvo")
+title = "Placeholder Stone"
+description = "[b]Stone[/b]
+If you have 6 stones in hand, you win the game."
+flavorText = ""
+cost = 0

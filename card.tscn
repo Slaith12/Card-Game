@@ -2,13 +2,13 @@
 
 [ext_resource type="Theme" uid="uid://cl8ov2hbps5vg" path="res://card_text_theme.tres" id="1_7ejxs"]
 [ext_resource type="Script" path="res://card.gd" id="1_nrgar"]
-[ext_resource type="Resource" uid="uid://cyjg4y30tim1p" path="res://Template Card.tres" id="2_8buhp"]
+[ext_resource type="Resource" uid="uid://cxir42sei1oe4" path="res://Cards/Stash.tres" id="2_4d04q"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_isw6p"]
 
 [node name="Card" type="Node2D"]
 script = ExtResource("1_nrgar")
-data = ExtResource("2_8buhp")
+data = ExtResource("2_4d04q")
 
 [node name="Frame" type="TextureRect" parent="."]
 anchors_preset = 8
@@ -35,7 +35,7 @@ offset_right = 20.0
 offset_bottom = 36.0
 grow_horizontal = 2
 theme = ExtResource("1_7ejxs")
-text = "Hello World"
+text = "Stash"
 horizontal_alignment = 1
 
 [node name="Description" type="RichTextLabel" parent="Frame"]
@@ -50,6 +50,8 @@ offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 0
 theme = ExtResource("1_7ejxs")
+theme_override_font_sizes/normal_font_size = 8
+theme_override_font_sizes/bold_font_size = 8
 bbcode_enabled = true
-text = "[center]Gain 1 Mana"
+text = "[center]Move any number of cards from your hand into your draw pile at any position."
 scroll_active = false
