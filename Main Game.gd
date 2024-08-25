@@ -1,14 +1,28 @@
 extends Node2D
 
-var p1Deck : Array[int]
-var p1Hand : Array[int]
-var p1Discard : Array[int]
+class GameCard:
+	var cardID : int
+	var revealState : int
+	func isRevealedTo(playerNum):
+		return (revealState | (1 << playerNum)) != 0
+	
+	func Scry(playerNum):
+		revealState |= 1 << playerNum
 
-var p2Deck : Array[int]
-var p2Hand : Array[int]
-var p2Discard : Array[int]
+	func _init(id):
+		cardID = id
+		revealState = 0
 
-var specialPile : Array[int]
+# Piles
+var p1Deck : Array[GameCard]
+var p1Hand : Array[GameCard]
+var p1Discard : Array[GameCard]
+
+var p2Deck : Array[GameCard]
+var p2Hand : Array[GameCard]
+var p2Discard : Array[GameCard]
+
+var specialPile : Array[GameCard]
 
 func piles(index):
 	match index:
@@ -21,6 +35,7 @@ func piles(index):
 		6: return specialPile
 		_: printerr("Tried to access invalid piles. Index ", index)
 
+# Game State
 @export var cards : Array[CardData]
 
 var activeCard : int
@@ -36,9 +51,16 @@ enum {WaitForAnim = 0, SelectP1Hand = 1, SelectP2Hand = 2, SelectP1Deck = 4, Sel
 func select(index, multi = false):
 	return (1 << index) + (MultiSelect if multi else 0)
 enum {HAND = 0, DECK = 2, DISCARD = 4, SPECIAL = 6}
+enum {P1 = 0, P2 = 1}
+
+# Display
+const base_card : PackedScene = preload("res://card.tscn")
+const blank_card : CardData = preload("res://Blank Card.tres")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	
+	#initialize piles
 	p1Deck = []
 	p1Hand = []
 	p1Discard = []
@@ -46,25 +68,34 @@ func _ready():
 	p2Hand = []
 	p2Discard = []
 
-	for i in range(30):
-		p1Deck.append(i)
-		p2Deck.append(i)
-
-	for i in range(30, 36):
-		if p1Deck.size() == 33:
-			p2Deck.append(i)
-		elif p2Deck.size() == 33:
-			p1Deck.append(i)
-		elif randi_range(0, 1) == 0:
-			p1Deck.append(i)
-		else:
-			p2Deck.append(i)
-	p1Deck.shuffle()
-	p2Deck.shuffle()
+	#insert standard cards
+	for i in range(20):
+		p1Deck.append(GameCard.new(i))
+		p2Deck.append(GameCard.new(i))
+	
+	#shuffle and draw starting hands
+	Shuffle(p1Deck)
+	Shuffle(p2Deck)
 	P1Draw(6)
 	P2Draw(6)
 
-	activePlayer = 1
+	#shuffle in stones
+	for i in range(20, 26):
+		if p1Deck.size() == 23:
+			p2Deck.append(GameCard.new(i))
+		elif p2Deck.size() == 23:
+			p1Deck.append(GameCard.new(i))
+		elif randi_range(0, 1) == 0:
+			p1Deck.append(GameCard.new(i))
+		else:
+			p2Deck.append(GameCard.new(i))
+		
+	Shuffle(p1Deck)
+	Shuffle(p2Deck)
+
+	#initialize game state
+	#setting activePlayer to player 2 and currentTurn to 0 before calling BeginNewTurn() will start the game on turn 1 on player 1's turn
+	activePlayer = P2
 	activeCard = -1
 	currentTurn = 0
 	BeginNewTurn()
@@ -72,7 +103,7 @@ func _ready():
 
 func BeginNewTurn():
 	activePlayer = inactivePlayer
-	if(activePlayer == 0):
+	if(activePlayer == P1):
 		currentTurn += 1
 	currentEnergy = currentTurn
 
@@ -80,16 +111,31 @@ func UpdateCardDisplay():
 	pass
 
 func EndCardAction(discard := true):
+	#place the used card in the discard pile (unless the card effect already placed it somewhere)
 	if discard:
 		piles(DISCARD + activePlayer).append(activeCard)
-	activeCard = -1
+
+
+	#draw to minimum hand size
 	if(p1Hand.size() < 6):
 		P1Draw(6 - p1Hand.size())
 	if(p2Hand.size() < 6):
 		P2Draw(6 - p2Hand.size())
+	
+	#reveal cards in hand/discard
+	for card in p1Hand:		card.revealState |= 1
+	for card in p2Hand:		card.revealState |= 2
+	for card in p1Discard: 	card.revealState = 3
+	for card in p2Discard: 	card.revealState = 3
+
+	#check if turn should pass
 	if(currentEnergy <= 0):
 		BeginNewTurn()
+
+	#reset card state to "Waiting for card"
+	activeCard = -1
 	currentAction = select(HAND + activePlayer)
+
 	UpdateCardDisplay()
 
 func ProcessCard(selectIndex): # selectIndex is an int for single selections, and an int array for multi-selections
@@ -98,62 +144,86 @@ func ProcessCard(selectIndex): # selectIndex is an int for single selections, an
 			var playerHand = piles(HAND + activePlayer)
 			var cardID = playerHand[selectIndex]
 			var cardData = cards[cardID]
-			if(cardData.cost > currentEnergy):
+
+			# check if card can be played (negative cost = unplayable/hide cost)
+			if cardData.cost > currentEnergy or cardData.cost < 0:
 				return
 			
+			# remove card from hand before playing it (don't put in discard pile yet)
 			playerHand.remove_at(selectIndex)
+
+			# initialize card state variables
 			activeCard = cardID
 			cardStep = 0
 			currentAction = WaitForAnim
+
+			#subtract energy cost
 			currentEnergy -= cardData.cost
 
-		0: #One with Nothing
+		0: #One with Nothing [Discard your hand]
 			piles(DISCARD + activePlayer).append_array(piles(HAND + activePlayer))
 			piles(HAND + activePlayer).clear()
 			EndCardAction()
-		1: #Swap
+		1: #Swap [take card from opp, opp takes this card]
 			match cardStep:
 				0:
+					#prompt player to select card from opponent's hand
 					currentAction = select(HAND + inactivePlayer)
 					cardStep = 1
 				1:
+					#move selected card to player's hand
 					var swappedCard = piles(HAND + inactivePlayer)[selectIndex]
-					piles(HAND+inactivePlayer).remove_at(selectIndex)
-					
+					piles(HAND+inactivePlayer).remove_at(selectIndex)					
 					piles(HAND+activePlayer).append(swappedCard)
+
+					#move "swap" card to opponent's hand
 					piles(HAND+inactivePlayer).append(activeCard)
+
 					EndCardAction()
-		2, 3: #Stash
+		2, 3: #Emergency Stash [store a card]
 			match cardStep:
 				0:
-					currentAction = select(HAND + activePlayer, true)
-					multiSelectLimit = 0
+					#prompt player to select card from hand
+					currentAction = select(HAND + activePlayer)
 					cardStep = 1
 				1:
+					#transfer card to special pile [stores it for the next step]
 					specialPile.clear()
-					for i in selectIndex:
-						specialPile.append(piles(HAND+activePlayer)[i])
-					for i in selectIndex: # only remove cards from hand after transferring ALL of them to the special pile
-						piles(HAND+activePlayer).remove_at(i)
-					currentAction = select(SPECIAL, true)
+					specialPile.append(piles(HAND+activePlayer)[selectIndex])
+					piles(HAND+activePlayer).remove_at(selectIndex)
+
+					currentAction = select(SPECIAL)
 					# put up ui for inserting cards into deck
 					cardStep = 2
 				2:
-					# specialPile contains all of the cards to be inserted, selectIndex contains the positions to insert them
-					# cards later in the special pile can sometimes "push back" cards earlier in the pile; keep this in mind when constructing select indices
-					for i in range(specialPile.size()):
-						var pos = selectIndex[i]
-						var card = specialPile[i]
-						piles(DECK+activePlayer).insert(pos, card)
+					# specialPile contains the card to be inserted, selectIndex contains the position to insert it
+					var pos = selectIndex
+					var card = specialPile[0]
+					piles(DECK+activePlayer).insert(pos, card)
+
 					EndCardAction()
-		4: #Snoop
+		4: #Snoop [scry 4 deck cards]
 			match cardStep:
 				0:
+					#prompt player to select 4 cards from decks
 					currentAction = SelectP1Deck | SelectP2Deck | MultiSelect
 					multiSelectLimit = 4
 					cardStep = 1
 				1:
 					#reveal cards
+					#select indices start with p1 deck, then p2 deck
+					for i in selectIndex:
+						#determine which deck the card is in, then scry
+						var card
+						if i < p1Deck.size():
+							card = p1Deck[i]
+						else:
+							i -= p1Deck.size()
+							card = p2Deck[i]
+						
+						card.Scry(activePlayer)
+
+					#give player time to look at cards before continuing
 					currentAction = WaitForAnim
 					cardStep = 2
 				2:
@@ -165,19 +235,28 @@ func ProcessCard(selectIndex): # selectIndex is an int for single selections, an
 					currentAction = select(SPECIAL)
 					cardStep = 1
 				1:
+					#Transfer all discard cards to deck, then shuffle
 					piles(DECK+selectIndex).append_array(piles(DISCARD+selectIndex))
 					piles(DISCARD+selectIndex).clear()
-					piles(DECK+selectIndex).shuffle()
+
+					Shuffle(piles(DECK+selectIndex))
 					EndCardAction()
 
 		6: #Sleight of Hand
 			match cardStep:
 				0:
+					#transfer top 3 cards of opponent's deck to the special pile
 					var deck = piles(DECK+inactivePlayer)
 					specialPile.clear()
 					specialPile.append_array(deck.slice(0,3))
+					#remove top 3 cards from deck
 					deck.assign(deck.slice(3))
-					#Show "Insert into deck" dialog [identical to Stash]
+
+					#scry selected cards
+					for card in specialPile:
+						card.Scry(activePlayer)
+					#Show stash dialog
+					#multiCardLimit doesn't need to be set for SelectSpecial
 					currentAction = select(SPECIAL, true)
 					cardStep = 1
 				1:
@@ -259,26 +338,6 @@ func ProcessCard(selectIndex): # selectIndex is an int for single selections, an
 			pass
 		25:
 			pass
-		26:
-			pass
-		27:
-			pass
-		28:
-			pass
-		29:
-			pass
-		30:
-			pass
-		31:
-			pass
-		32:
-			pass
-		33:
-			pass
-		34:
-			pass
-		35:
-			pass
 
 func P1Draw(num = 1, toHand = true):
 	var cards = []
@@ -321,3 +380,8 @@ func P2Draw(num = 1, toHand = true):
 	if toHand:
 		p2Hand.append_array(cards)
 	return cards
+
+func Shuffle(pile):
+	pile.shuffle()
+	for card in pile:
+		card.revealState = 0
