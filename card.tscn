@@ -16,27 +16,28 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -75.0
-offset_top = -112.5
-offset_right = 75.0
-offset_bottom = 112.5
+offset_left = -60.0
+offset_top = -90.0
+offset_right = 60.0
+offset_bottom = 90.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("CanvasTexture_isw6p")
 
 [node name="Title" type="Label" parent="Frame"]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -20.0
-offset_top = 10.0
-offset_right = 20.0
+anchors_preset = -1
+anchor_right = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
 offset_bottom = 36.0
 grow_horizontal = 2
 theme = ExtResource("1_7ejxs")
-text = "Stash"
+theme_override_font_sizes/font_size = 12
+text = "Emergency Stash"
 horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="Description" type="RichTextLabel" parent="Frame"]
 layout_mode = 1
@@ -53,5 +54,5 @@ theme = ExtResource("1_7ejxs")
 theme_override_font_sizes/normal_font_size = 8
 theme_override_font_sizes/bold_font_size = 8
 bbcode_enabled = true
-text = "[center]Move any number of cards from your hand into your draw pile at any position."
+text = "[center][b]Store[/b] a card from your hand."
 scroll_active = false

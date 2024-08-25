@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://s856tm2gy7i5"]
+[gd_scene load_steps=17 format=3 uid="uid://s856tm2gy7i5"]
 
 [ext_resource type="Script" path="res://Main Game.gd" id="1_jstw6"]
 [ext_resource type="Resource" uid="uid://bckv7go8atlr4" path="res://Cards/One With Nothing.tres" id="2_67l00"]
@@ -14,7 +14,70 @@
 [ext_resource type="Resource" uid="uid://c4gbry17mslh0" path="res://Cards/Sharing is Caring.tres" id="12_0mfdq"]
 [ext_resource type="Resource" uid="uid://ccyfn7o7kd4sl" path="res://Cards/I Earned This.tres" id="13_37xhj"]
 [ext_resource type="Resource" uid="uid://blpmm732mvf5q" path="res://Cards/Recycle.tres" id="14_fmo71"]
+[ext_resource type="Resource" uid="uid://c83j72u3a7pv0" path="res://Cards/Stone (Placeholder).tres" id="15_m5d8t"]
+[ext_resource type="PackedScene" uid="uid://bntal73dk3fwn" path="res://card.tscn" id="16_n8xuq"]
 
-[node name="Main Game" type="Node2D"]
+[node name="MainGame" type="Node2D"]
 script = ExtResource("1_jstw6")
-cards = Array[Resource("res://CardData.gd")]([ExtResource("2_67l00"), ExtResource("3_hyovy"), ExtResource("4_sts6k"), ExtResource("4_sts6k"), ExtResource("5_ss3f3"), ExtResource("6_i8uex"), ExtResource("7_kqbcp"), ExtResource("8_3pi37"), ExtResource("8_3pi37"), ExtResource("9_xmydk"), ExtResource("10_66emp"), ExtResource("10_66emp"), ExtResource("11_a4a6j"), ExtResource("12_0mfdq"), ExtResource("13_37xhj"), ExtResource("14_fmo71"), null, null, null, null])
+cards = Array[Resource("res://CardData.gd")]([ExtResource("2_67l00"), ExtResource("3_hyovy"), ExtResource("4_sts6k"), ExtResource("4_sts6k"), ExtResource("5_ss3f3"), ExtResource("6_i8uex"), ExtResource("7_kqbcp"), ExtResource("8_3pi37"), ExtResource("8_3pi37"), ExtResource("9_xmydk"), ExtResource("10_66emp"), ExtResource("10_66emp"), ExtResource("11_a4a6j"), ExtResource("12_0mfdq"), ExtResource("13_37xhj"), ExtResource("14_fmo71"), null, null, null, null, ExtResource("15_m5d8t"), ExtResource("15_m5d8t"), ExtResource("15_m5d8t"), ExtResource("15_m5d8t"), ExtResource("15_m5d8t"), ExtResource("15_m5d8t")])
+
+[node name="PlayHand" type="Marker2D" parent="."]
+position = Vector2(0, 280)
+
+[node name="Card" parent="PlayHand" instance=ExtResource("16_n8xuq")]
+position = Vector2(-225, 0)
+
+[node name="Card2" parent="PlayHand" instance=ExtResource("16_n8xuq")]
+position = Vector2(-135, 0)
+
+[node name="Card3" parent="PlayHand" instance=ExtResource("16_n8xuq")]
+position = Vector2(-45, 0)
+
+[node name="Card4" parent="PlayHand" instance=ExtResource("16_n8xuq")]
+position = Vector2(45, 0)
+
+[node name="Card5" parent="PlayHand" instance=ExtResource("16_n8xuq")]
+position = Vector2(135, 0)
+
+[node name="Card6" parent="PlayHand" instance=ExtResource("16_n8xuq")]
+position = Vector2(225, 0)
+
+[node name="PlayDeck" type="Marker2D" parent="."]
+position = Vector2(-460, 190)
+
+[node name="Card" parent="PlayDeck" instance=ExtResource("16_n8xuq")]
+
+[node name="PlayDiscard" type="Marker2D" parent="."]
+position = Vector2(460, 190)
+
+[node name="Card" parent="PlayDiscard" instance=ExtResource("16_n8xuq")]
+
+[node name="OppHand" type="Marker2D" parent="."]
+position = Vector2(0, -280)
+rotation = 3.14159
+
+[node name="Card" parent="OppHand" instance=ExtResource("16_n8xuq")]
+position = Vector2(-300, 0)
+
+[node name="Card2" parent="OppHand" instance=ExtResource("16_n8xuq")]
+position = Vector2(-180, 0)
+
+[node name="Card3" parent="OppHand" instance=ExtResource("16_n8xuq")]
+position = Vector2(-60, 0)
+
+[node name="Card4" parent="OppHand" instance=ExtResource("16_n8xuq")]
+position = Vector2(60, 0)
+
+[node name="Card5" parent="OppHand" instance=ExtResource("16_n8xuq")]
+position = Vector2(180, 0)
+
+[node name="Card6" parent="OppHand" instance=ExtResource("16_n8xuq")]
+position = Vector2(300, 0)
+
+[node name="OppDeck" type="Marker2D" parent="."]
+position = Vector2(-460, -190)
+
+[node name="OppDiscard" type="Marker2D" parent="."]
+position = Vector2(460, -190)
+
+[node name="Camera2D" type="Camera2D" parent="."]
