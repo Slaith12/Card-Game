@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_0abo8")
-title = "Stash"
-description = "Move any number of cards from your hand into your draw pile at any position."
+title = "Emergency Stash"
+description = "[b]Store[/b] a card from your hand."
 flavorText = ""
-cost = 3
+cost = 2

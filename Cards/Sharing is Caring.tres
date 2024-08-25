@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_sh38v")
 title = "Sharing is Caring"
-description = "Both players reveal their hand. Each player takes 2 cards from the other player's hand."
+description = "Both players [b]reveal[/b] their hand. Each player [b]takes[/b] 2 cards from the other player's hand."
 flavorText = ""
 cost = 5

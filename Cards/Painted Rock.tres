@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_uaspj")
 title = "Painted Rock"
-description = "If this card is revealed to the opponent and they are able to take this card, they MUST take this card. Discarding this card costs 4 energy instead of 1."
+description = "If this card is revealed to the opponent, and they are able to [b]take[/b] this card, they MUST [b]take[/b] this card. [b]Sticky 4[/b]."
 flavorText = "That's not a stone, it's a rock!"
 cost = 4

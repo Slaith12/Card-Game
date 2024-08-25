@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_k32be")
 title = "Trash Bandit"
-description = "Put a card from any discard pile into your hand."
+description = "[b]Take[/b] a card from any discard pile."
 flavorText = ""
 cost = 3

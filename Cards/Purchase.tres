@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_fhdd6")
 title = "Purchase"
-description = "Take a card from the opponent's hand. Opponent gets +3 energy next turn."
+description = "[b]Take[/b] a card from the opponent's hand. Opponent gets +3 energy next turn."
 flavorText = ""
 cost = 3

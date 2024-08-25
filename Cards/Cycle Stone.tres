@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://c30wumnba1f7y"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_iujvg"]
+
+[resource]
+script = ExtResource("1_iujvg")
+title = "Cycle Stone"
+description = "[b]Stone[/b]
+Draw a card, then discard a card. Repeat this up to 10 times."
+flavorText = ""
+cost = 5

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://vjnyxbxlik50"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_t5v7d"]
+
+[resource]
+script = ExtResource("1_t5v7d")
+title = "Trap Stone"
+description = "[b]Stone[/b]
+[b]Reveal[/b] and [b]store[/b] this card.
+While this card is in the draw pile and revealed to both players, the [b]owner[/b] of this card has the option to discard a card to take the first card played by the opponent each turn."
+flavorText = "This probably isn't being included in the starting card set"
+cost = 6

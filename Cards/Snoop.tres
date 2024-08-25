@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_hrsm8")
 title = "Snoop"
-description = "Look at any 4 cards from any draw pile."
+description = "[b]Scry[/b] any 4 cards from any draw pile."
 flavorText = "What do we have here?"
 cost = 2

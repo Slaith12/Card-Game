@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_s7fik")
 title = "I Earned This"
-description = "Take a card from any draw pile from any position."
+description = "[b]Take[/b] a card from any draw pile."
 flavorText = "After everything I've done, I think I deserve a little treat."
 cost = 8

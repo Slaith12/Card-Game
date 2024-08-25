@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_qvgjs")
 title = "Recycle"
-description = "Choose a card in your discard pile. At the beginning of your next turn, play that card without paying its energy cost."
+description = "Choose a card from your discard pile. At the beginning of your next turn, if you [b]own[/b] the selected card, play that card without paying its energy cost."
 flavorText = ""
-cost = 6
+cost = 4

@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_nn2ll")
 title = "One with Nothing"
-description = "Discard your hand."
+description = "[b]Discard[/b] your hand."
 flavorText = "When nothing remains, everything is equally possible."
 cost = 1

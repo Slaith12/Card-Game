@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_38ud0")
 title = "Forced Kindness"
-description = "Opponent discards all but one card from their hand. Opponent gets every card in your hand (except this one)."
+description = "Opponent [b]discards[/b] all but one card from their hand. Opponent [b]takes[/b] every card from your hand (except this one)."
 flavorText = "Here, have a gift, I insist."
 cost = 5

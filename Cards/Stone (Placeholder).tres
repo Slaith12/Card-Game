@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_qocvo")
-title = "Placeholder Stone"
+title = "Grey Stone"
 description = "[b]Stone[/b]
 If you have 6 stones in hand, you win the game."
 flavorText = ""

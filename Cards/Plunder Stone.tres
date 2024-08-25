@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://ds16hysiu626w"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_fmp00"]
+
+[resource]
+script = ExtResource("1_fmp00")
+title = "Plunder Stone"
+description = "[b]Stone[/b]
+[b]Take[/b] a card from the opponent's hand."
+flavorText = ""
+cost = 3

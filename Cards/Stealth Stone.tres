@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3 uid="uid://bl48e4t7uf0fd"]
+
+[ext_resource type="Script" path="res://CardData.gd" id="1_78wlv"]
+
+[resource]
+script = ExtResource("1_78wlv")
+title = "Stealth Stone"
+description = "[b]Stone[/b]
+[b]Store[/b] any number of cards from your hand. The opponent does not see where these cards are placed."
+flavorText = ""
+cost = 3

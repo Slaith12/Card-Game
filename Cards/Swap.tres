@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_ip4jp")
 title = "Swap"
-description = "Take a card from the opponent's hand. Put this card in the opponent's hand."
+description = "[b]Take[/b] a card from the opponent's hand. Opponent [b]takes[/b] this card."
 flavorText = ""
 cost = 2

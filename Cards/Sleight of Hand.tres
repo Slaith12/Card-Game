@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_wqu4j")
 title = "Sleight of Hand"
-description = "Look at the top 3 cards of the opponent's draw pile. Place those cards anywhere in their draw pile."
+description = "[b]Scry[/b] and [b]store[/b] the top 3 cards from the opponent's draw pile."
 flavorText = ""
-cost = 4
+cost = 5
