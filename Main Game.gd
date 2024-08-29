@@ -4,7 +4,7 @@ class GameCard:
 	var cardID : int
 	var revealState : int
 	func isRevealedTo(playerNum):
-		return (revealState | (1 << playerNum)) != 0
+		return (revealState & (1 << playerNum)) != 0
 	
 	func Scry(playerNum):
 		revealState |= 1 << playerNum
@@ -37,11 +37,13 @@ func piles(index):
 
 # Game State
 @export var cards : Array[CardData]
+@export var deckSize : int
 
 var activeCard : int
 var activePlayer : int
 var inactivePlayer:
 	get: return activePlayer ^ 1
+var playingAs : int
 var cardStep : int
 var currentAction : int
 var currentTurn : int
@@ -56,6 +58,7 @@ enum {P1 = 0, P2 = 1}
 # Display
 const base_card : PackedScene = preload("res://card.tscn")
 const blank_card : CardData = preload("res://Blank Card.tres")
+const hand_spacing := 90.0 + 35
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -69,7 +72,7 @@ func _ready():
 	p2Discard = []
 
 	#insert standard cards
-	for i in range(20):
+	for i in range(deckSize):
 		p1Deck.append(GameCard.new(i))
 		p2Deck.append(GameCard.new(i))
 	
@@ -80,10 +83,10 @@ func _ready():
 	P2Draw(6)
 
 	#shuffle in stones
-	for i in range(20, 26):
-		if p1Deck.size() == 23:
+	for i in range(deckSize, deckSize+6):
+		if p1Deck.size() == deckSize+3:
 			p2Deck.append(GameCard.new(i))
-		elif p2Deck.size() == 23:
+		elif p2Deck.size() == deckSize+3:
 			p1Deck.append(GameCard.new(i))
 		elif randi_range(0, 1) == 0:
 			p1Deck.append(GameCard.new(i))
@@ -93,6 +96,11 @@ func _ready():
 	Shuffle(p1Deck)
 	Shuffle(p2Deck)
 
+	UpdateRevealedCards()
+	UpdateCardDisplay()
+
+	playingAs = P1 # hardcoded to p1 for now
+
 	#initialize game state
 	#setting activePlayer to player 2 and currentTurn to 0 before calling BeginNewTurn() will start the game on turn 1 on player 1's turn
 	activePlayer = P2
@@ -101,6 +109,64 @@ func _ready():
 	BeginNewTurn()
 	currentAction = SelectP1Hand
 
+func _input(event):
+	if event.is_action_pressed("reveal"):
+		for card in p2Hand:
+			card.revealState ^= 1
+		UpdateCardDisplay()
+
+	if event.is_action_pressed("dump_known"):
+		var line = "Your hand (size " + str(p1Hand.size()) + "): "
+		for card in p1Hand:
+			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(P1) else "Unknown, "
+		print(line)
+		line = "Enemy hand (size " + str(p2Hand.size()) + "): "
+		for card in p2Hand:
+			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(P1) else "Unknown, "
+		print(line)
+		line = "Your discard (size " + str(p1Discard.size()) + "): "
+		for card in p1Discard:
+			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(P1) else "Unknown, "
+		print(line)
+		line = "Enemy discard (size " + str(p2Discard.size()) + "): "
+		for card in p2Discard:
+			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(P1) else "Unknown, "
+		print(line)
+		line = "Your deck (size " + str(p1Deck.size()) + "): "
+		for card in p1Deck:
+			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(P1) else "Unknown, "
+		print(line)
+		line = "Enemy deck (size " + str(p1Deck.size()) + "): "
+		for card in p2Deck:
+			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(P1) else "Unknown, "
+		print(line)
+
+	if event.is_action_pressed("dump_all"):
+		var line = "Your hand (size " + str(p1Hand.size()) + "): "
+		for card in p1Hand:
+			line += cards[card.cardID].title + " [" + str(card.cardID) + "], "
+		print(line)
+		line = "Enemy hand (size " + str(p2Hand.size()) + "): "
+		for card in p2Hand:
+			line += cards[card.cardID].title + " [" + str(card.cardID) + "], "
+		print(line)
+		line = "Your discard (size " + str(p1Discard.size()) + "): "
+		for card in p1Discard:
+			line += cards[card.cardID].title + " [" + str(card.cardID) + "], "
+		print(line)
+		line = "Enemy discard (size " + str(p2Discard.size()) + "): "
+		for card in p2Discard:
+			line += cards[card.cardID].title + " [" + str(card.cardID) + "], "
+		print(line)
+		line = "Your deck (size " + str(p1Deck.size()) + "): "
+		for card in p1Deck:
+			line += cards[card.cardID].title + " [" + str(card.cardID) + "], "
+		print(line)
+		line = "Enemy deck (size " + str(p1Deck.size()) + "): "
+		for card in p2Deck:
+			line += cards[card.cardID].title + " [" + str(card.cardID) + "], "
+		print(line)
+
 func BeginNewTurn():
 	activePlayer = inactivePlayer
 	if(activePlayer == P1):
@@ -108,7 +174,26 @@ func BeginNewTurn():
 	currentEnergy = currentTurn
 
 func UpdateCardDisplay():
-	pass
+	UpdatePileSpread($PlayHand, piles(HAND + playingAs))
+	UpdatePileSpread($OppHand, piles(HAND + (playingAs^1)))
+
+func UpdatePileSpread(spread, handData):
+	while spread.get_child_count() < handData.size():
+		spread.add_child(base_card.instantiate())
+	while spread.get_child_count() > handData.size():
+		spread.get_child(0).free() # may cause problems later but it should be fine for now since nothing else references the card objects
+
+	if handData.size() == 0: return
+
+	var cardPos = hand_spacing * (handData.size() - 1) / -2.0
+	var cardObjects = spread.get_children()
+	for i in range(cardObjects.size()):
+		var display = cardObjects[i]
+		var card = handData[i]
+		var data = cards[card.cardID] if card.isRevealedTo(playingAs) else blank_card # will need to be changed; card display will need to know reveal info and other info later
+		display.position.x = cardPos
+		display.SetData(data)
+		cardPos += hand_spacing
 
 func EndCardAction(discard := true):
 	#place the used card in the discard pile (unless the card effect already placed it somewhere)
@@ -122,11 +207,7 @@ func EndCardAction(discard := true):
 	if(p2Hand.size() < 6):
 		P2Draw(6 - p2Hand.size())
 	
-	#reveal cards in hand/discard
-	for card in p1Hand:		card.revealState |= 1
-	for card in p2Hand:		card.revealState |= 2
-	for card in p1Discard: 	card.revealState = 3
-	for card in p2Discard: 	card.revealState = 3
+	UpdateRevealedCards()
 
 	#check if turn should pass
 	if(currentEnergy <= 0):
@@ -137,6 +218,13 @@ func EndCardAction(discard := true):
 	currentAction = select(HAND + activePlayer)
 
 	UpdateCardDisplay()
+
+func UpdateRevealedCards():
+	for card in p1Hand:		card.revealState |= 1
+	for card in p2Hand:		card.revealState |= 2
+	for card in p1Discard: 	card.revealState = 3
+	for card in p2Discard: 	card.revealState = 3
+
 
 func ProcessCard(selectIndex): # selectIndex is an int for single selections, and an int array for multi-selections
 	match activeCard:
