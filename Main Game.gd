@@ -470,6 +470,9 @@ func P2Draw(num = 1, toHand = true):
 	return cards
 
 func Shuffle(pile):
+	if pile.size() < 2: return
+
 	pile.shuffle()
+	
 	for card in pile:
 		card.revealState = 0
