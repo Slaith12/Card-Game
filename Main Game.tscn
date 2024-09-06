@@ -81,3 +81,33 @@ position = Vector2(-460, -190)
 position = Vector2(460, -190)
 
 [node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="NumEntry" type="LineEdit" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -33.5313
+offset_top = -15.5
+offset_right = 33.5313
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="ConfirmButton" type="Button" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -35.5
+offset_top = 27.0
+offset_right = 35.5
+offset_bottom = 58.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Confirm"
+
+[connection signal="pressed" from="ConfirmButton" to="." method="_on_confirm_button_pressed"]

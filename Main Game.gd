@@ -13,6 +13,8 @@ class GameCard:
 		cardID = id
 		revealState = 0
 
+var inputBuffer : Array[int]
+
 # Piles
 var p1Deck : Array[GameCard]
 var p1Hand : Array[GameCard]
@@ -39,7 +41,7 @@ func piles(index):
 @export var cards : Array[CardData]
 @export var deckSize : int
 
-var activeCard : int
+var activeCard : GameCard
 var activePlayer : int
 var inactivePlayer:
 	get: return activePlayer ^ 1
@@ -62,7 +64,9 @@ const hand_spacing := 90.0 + 35
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
+
+	inputBuffer = []
+
 	#initialize piles
 	p1Deck = []
 	p1Hand = []
@@ -82,11 +86,11 @@ func _ready():
 	P1Draw(6)
 	P2Draw(6)
 
-	#shuffle in stones
+	#shuffle in stones (since the hands are already dealt, the decks would currently be deckSize-6 cards, so add 3 cards to each)
 	for i in range(deckSize, deckSize+6):
-		if p1Deck.size() == deckSize+3:
+		if p1Deck.size() == deckSize-3:
 			p2Deck.append(GameCard.new(i))
-		elif p2Deck.size() == deckSize+3:
+		elif p2Deck.size() == deckSize-3:
 			p1Deck.append(GameCard.new(i))
 		elif randi_range(0, 1) == 0:
 			p1Deck.append(GameCard.new(i))
@@ -104,10 +108,14 @@ func _ready():
 	#initialize game state
 	#setting activePlayer to player 2 and currentTurn to 0 before calling BeginNewTurn() will start the game on turn 1 on player 1's turn
 	activePlayer = P2
-	activeCard = -1
+	activeCard = null
 	currentTurn = 0
 	BeginNewTurn()
 	currentAction = SelectP1Hand
+
+func _process(delta):
+	if currentAction == WaitForAnim:
+		ProcessCard(0)
 
 func _input(event):
 	if event.is_action_pressed("reveal"):
@@ -136,7 +144,7 @@ func _input(event):
 		for card in p1Deck:
 			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(P1) else "Unknown, "
 		print(line)
-		line = "Enemy deck (size " + str(p1Deck.size()) + "): "
+		line = "Enemy deck (size " + str(p2Deck.size()) + "): "
 		for card in p2Deck:
 			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(P1) else "Unknown, "
 		print(line)
@@ -162,16 +170,28 @@ func _input(event):
 		for card in p1Deck:
 			line += cards[card.cardID].title + " [" + str(card.cardID) + "], "
 		print(line)
-		line = "Enemy deck (size " + str(p1Deck.size()) + "): "
+		line = "Enemy deck (size " + str(p2Deck.size()) + "): "
 		for card in p2Deck:
 			line += cards[card.cardID].title + " [" + str(card.cardID) + "], "
 		print(line)
+
+func _on_confirm_button_pressed():
+	var input = int($NumEntry.text)
+	$NumEntry.clear()
+	if currentAction & MultiSelect:
+		inputBuffer.append(input)
+		if inputBuffer.size() >= multiSelectLimit:
+			ProcessCard(inputBuffer)
+			inputBuffer.clear()
+	else:
+		ProcessCard(input)
 
 func BeginNewTurn():
 	activePlayer = inactivePlayer
 	if(activePlayer == P1):
 		currentTurn += 1
 	currentEnergy = currentTurn
+	print("It is now player " + str(activePlayer+1) + "'s turn. They have " + str(currentEnergy) + " energy.")
 
 func UpdateCardDisplay():
 	UpdatePileSpread($PlayHand, piles(HAND + playingAs))
@@ -196,6 +216,7 @@ func UpdatePileSpread(spread, handData):
 		cardPos += hand_spacing
 
 func EndCardAction(discard := true):
+	print("End Card Action")
 	#place the used card in the discard pile (unless the card effect already placed it somewhere)
 	if discard:
 		piles(DISCARD + activePlayer).append(activeCard)
@@ -214,7 +235,7 @@ func EndCardAction(discard := true):
 		BeginNewTurn()
 
 	#reset card state to "Waiting for card"
-	activeCard = -1
+	activeCard = null
 	currentAction = select(HAND + activePlayer)
 
 	UpdateCardDisplay()
@@ -227,27 +248,41 @@ func UpdateRevealedCards():
 
 
 func ProcessCard(selectIndex): # selectIndex is an int for single selections, and an int array for multi-selections
-	match activeCard:
-		-1: # None
-			var playerHand = piles(HAND + activePlayer)
-			var cardID = playerHand[selectIndex]
-			var cardData = cards[cardID]
+	if activeCard == null:
+		var playerHand = piles(HAND + activePlayer)
+		var selectedCard = playerHand[selectIndex]
+		var cardID = selectedCard.cardID
+		var cardData = cards[cardID]
 
-			# check if card can be played (negative cost = unplayable/hide cost)
-			if cardData.cost > currentEnergy or cardData.cost < 0:
-				return
-			
-			# remove card from hand before playing it (don't put in discard pile yet)
+		# check if card can be played (negative cost = unplayable/hide cost)
+		if cardData.cost > currentEnergy or cardData.cost < 0:
+			#if unplayable, discard instead
+			if cardID == 12: #Painted Rock costs 4 to discard
+				if currentEnergy < 4:
+					print("Unable to discard painted rock")
+					return
+				currentEnergy -= 3
+			currentEnergy -= 1
+			print("Discarding " + cardData.title)
 			playerHand.remove_at(selectIndex)
+			piles(DISCARD+activePlayer).append(selectedCard)
+			EndCardAction(false)
+			return
+		
+		# remove card from hand before playing it (don't put in discard pile yet)
+		playerHand.remove_at(selectIndex)
+		selectedCard.revealState = 3
+		print("Playing " + cardData.title)
+		# initialize card state variables
+		activeCard = selectedCard
+		cardStep = 0
+		currentAction = WaitForAnim
 
-			# initialize card state variables
-			activeCard = cardID
-			cardStep = 0
-			currentAction = WaitForAnim
+		#subtract energy cost
+		currentEnergy -= cardData.cost
+		return
 
-			#subtract energy cost
-			currentEnergy -= cardData.cost
-
+	match activeCard.cardID:
 		0: #One with Nothing [Discard your hand]
 			piles(DISCARD + activePlayer).append_array(piles(HAND + activePlayer))
 			piles(HAND + activePlayer).clear()
@@ -344,8 +379,8 @@ func ProcessCard(selectIndex): # selectIndex is an int for single selections, an
 					for card in specialPile:
 						card.Scry(activePlayer)
 					#Show stash dialog
-					#multiCardLimit doesn't need to be set for SelectSpecial
 					currentAction = select(SPECIAL, true)
+					multiSelectLimit = 3
 					cardStep = 1
 				1:
 					for i in range(specialPile.size()):
@@ -385,11 +420,11 @@ func ProcessCard(selectIndex): # selectIndex is an int for single selections, an
 					activePlayer = inactivePlayer
 					EndCardAction()
 		10, 11: #Purchase
-			pass
+			EndCardAction()
 		12: #Painted Rock
-			pass
+			EndCardAction()
 		13: #Sharing is Caring
-			pass
+			EndCardAction()
 		14: #I Earned This
 			match cardStep:
 				0:
