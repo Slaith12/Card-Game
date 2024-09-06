@@ -119,34 +119,34 @@ func _process(delta):
 
 func _input(event):
 	if event.is_action_pressed("reveal"):
-		for card in p2Hand:
-			card.revealState ^= 1
+		playingAs ^= 1
+		print("Viewing as player " + str(playingAs+1))
 		UpdateCardDisplay()
 
 	if event.is_action_pressed("dump_known"):
 		var line = "Your hand (size " + str(p1Hand.size()) + "): "
 		for card in p1Hand:
-			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(P1) else "Unknown, "
+			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(playingAs) else "Unknown, "
 		print(line)
 		line = "Enemy hand (size " + str(p2Hand.size()) + "): "
 		for card in p2Hand:
-			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(P1) else "Unknown, "
+			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(playingAs) else "Unknown, "
 		print(line)
 		line = "Your discard (size " + str(p1Discard.size()) + "): "
 		for card in p1Discard:
-			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(P1) else "Unknown, "
+			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(playingAs) else "Unknown, "
 		print(line)
 		line = "Enemy discard (size " + str(p2Discard.size()) + "): "
 		for card in p2Discard:
-			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(P1) else "Unknown, "
+			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(playingAs) else "Unknown, "
 		print(line)
 		line = "Your deck (size " + str(p1Deck.size()) + "): "
 		for card in p1Deck:
-			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(P1) else "Unknown, "
+			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(playingAs) else "Unknown, "
 		print(line)
 		line = "Enemy deck (size " + str(p2Deck.size()) + "): "
 		for card in p2Deck:
-			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(P1) else "Unknown, "
+			line += (cards[card.cardID].title + " [" + str(card.cardID) + "], ") if card.isRevealedTo(playingAs) else "Unknown, "
 		print(line)
 
 	if event.is_action_pressed("dump_all"):
